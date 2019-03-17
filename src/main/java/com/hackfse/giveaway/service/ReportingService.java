@@ -24,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hackfse.giveaway.dao.InventoryManagementDao;
+import com.hackfse.giveaway.dao.UserDao;
+import com.hackfse.giveaway.dto.UsersBean;
+import com.hackfse.giveaway.util.CommonUtil;
 
 @Service
 public class ReportingService {
@@ -31,15 +34,21 @@ public class ReportingService {
 	@Autowired
 	InventoryManagementDao inventoryManagementDao;
 	
+	@Autowired
+	UserDao userDao;
+	
+	CommonUtil commonUtil = new CommonUtil();
+	
 	
 	public List<Object[]> getReportForInventry(String itemCategory, String itemStatus, Long qutrValue, Long yrValue,
-			String userId) {
+			String mntname, String userId) {
 		List<Object[]> lstReportData = new ArrayList<Object[]>();
-		System.out.println("DATA OUTPUT : "+itemCategory+" :::: "+itemStatus+" :::: "+qutrValue+" :::: "+yrValue+" :::: "+userId);
+		System.out.println("DATA OUTPUT : "+itemCategory+" :::: "+itemStatus+" :::: "+qutrValue+" :::: "+yrValue+" :::: "+mntname+" :::: "+userId);
 		lstReportData = inventoryManagementDao.getInventoryReport(itemCategory.trim().equalsIgnoreCase("") ? null : itemCategory.trim().equalsIgnoreCase("null") ? null : itemCategory.trim(),
 						itemStatus.trim().equalsIgnoreCase("") ? null : itemStatus.trim().equalsIgnoreCase("null") ? null : itemStatus.trim(), 
 						qutrValue.toString().trim().equalsIgnoreCase("") ? null : qutrValue.toString().trim().equalsIgnoreCase("0") ? null : qutrValue, 
 						yrValue.toString().trim().equalsIgnoreCase("") ? null : yrValue.toString().trim().equalsIgnoreCase("0") ? null : yrValue, 
+						mntname.trim().equalsIgnoreCase("") ? null : mntname.trim().equalsIgnoreCase("null") ? null : mntname.trim(),
 						userId.trim().equalsIgnoreCase("") ? null : userId.trim().equalsIgnoreCase("null") ? null : userId.trim());
 		return lstReportData;
 		
@@ -124,9 +133,21 @@ public class ReportingService {
 	        FileInputStream fis = new FileInputStream(file);
 	        fis.read(bytes);
 	        String base64 = new sun.misc.BASE64Encoder().encode(bytes);
-	        
+	        base64 = base64.replace("\n", "").replace("\r", "");
 	        return base64;
 	}
 	
-	
+	public String getUserList() throws IOException {
+		List<UsersBean> listUsers = userDao.findAll();
+		List<Object[]> lstReportData = new ArrayList<Object[]>();
+		for(UsersBean userBean : listUsers) {
+			Object[] userRow = new Object[2];
+			userRow[0] = userBean.getUserName();
+			userRow[1] = userBean.getUserFirstName()+" "+userBean.getUserLastName();
+			lstReportData.add(userRow);
+		}
+		String strReportData = commonUtil.writeListToJsonArray(lstReportData);
+		
+		return strReportData;
+	}
 }

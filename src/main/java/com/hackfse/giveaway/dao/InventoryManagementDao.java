@@ -44,6 +44,7 @@ public interface InventoryManagementDao extends JpaRepository<InventoryBean, Lon
 			"AND COALESCE(dm2.typeCode, '') = COALESCE(:itemStat,COALESCE(dm2.typeCode, '')) "+
 			"AND COALESCE(QUARTER(inv.submissionDate), 0) = COALESCE(:qtrVal, COALESCE(QUARTER(inv.submissionDate), 0)) "+
 			"AND COALESCE(YEAR(inv.submissionDate),0) = COALESCE(:qtrYr, COALESCE(YEAR(inv.submissionDate),0)) "+
+			"AND COALESCE(MONTHNAME(inv.submissionDate),'') = COALESCE(:mntname, COALESCE(MONTHNAME(inv.submissionDate),'')) "+
 			"AND COALESCE(usr.userName, '') = COALESCE(:qtrUser,COALESCE(usr.userName, ''))")
-	public List<Object[]> getInventoryReport(@Param("itemCat") String itemCategory, @Param("itemStat") String itemStatus, @Param("qtrVal") Long qtrVal, @Param("qtrYr") Long qtrYr, @Param("qtrUser") String qtrUser);
+	public List<Object[]> getInventoryReport(@Param("itemCat") String itemCategory, @Param("itemStat") String itemStatus, @Param("qtrVal") Long qtrVal, @Param("qtrYr") Long qtrYr, @Param("mntname") String mntname, @Param("qtrUser") String qtrUser);
 }

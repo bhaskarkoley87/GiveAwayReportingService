@@ -28,14 +28,19 @@ public class GenerateReport {
 	private static String[] columns = {"Item Category", "Item Name", "Item Count", "Item Status", "Date of submition", "Month of Submition", "Quarter of Submition", "Year of Submition", "Month Date of Submition", "Submited By"};
 	
 	@RequestMapping(value="/inventry", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE) 
-	public String[]  generateReportForInventry(@RequestParam String itemCategory, @RequestParam String itemStatus, @RequestParam Long qutrValue, @RequestParam Long yrValue, @RequestParam String userId) throws IOException{
+	public String[]  generateReportForInventry(@RequestParam String itemCategory, @RequestParam String itemStatus, @RequestParam Long qutrValue, @RequestParam Long yrValue, @RequestParam String mntName, @RequestParam String userId) throws IOException{
 		String[] responseData = new String[2];
 		commonUtil = new CommonUtil();
-		List<Object[]> lstReportData = reportingService.getReportForInventry(itemCategory, itemStatus.trim(), qutrValue, yrValue, userId);
+		List<Object[]> lstReportData = reportingService.getReportForInventry(itemCategory, itemStatus.trim(), qutrValue, yrValue, mntName, userId);
 		String strFileData = reportingService.generateReportExcel(columns, lstReportData, "Inventry_Report_"+System.currentTimeMillis());
 		String strReportData = commonUtil.writeListToJsonArray(lstReportData);
 		responseData[0] = strReportData;
 		responseData[1] = strFileData;
 		return responseData;
+	}
+	
+	@RequestMapping(value="/getUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getUserDetails() throws IOException {
+		return reportingService.getUserList();	
 	}
 }
