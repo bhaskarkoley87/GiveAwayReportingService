@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class ReportingService {
 	
 	
 	public List<Object[]> getReportForInventry(String itemCategory, String itemStatus, Long qutrValue, Long yrValue,
-			String mntname, String userId) {
+			String mntname, String userId) throws SQLException {
 		List<Object[]> lstReportData = new ArrayList<Object[]>();
 		System.out.println("DATA OUTPUT : "+itemCategory+" :::: "+itemStatus+" :::: "+qutrValue+" :::: "+yrValue+" :::: "+mntname+" :::: "+userId);
 		lstReportData = inventoryManagementDao.getInventoryReport(itemCategory.trim().equalsIgnoreCase("") ? null : itemCategory.trim().equalsIgnoreCase("null") ? null : itemCategory.trim(),
