@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hackfse.giveaway.dao.InventoryManagementDao;
@@ -37,6 +38,9 @@ public class ReportingService {
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Value("${application.storage.location}")
+	private String fileStorageLocation;
 	
 	CommonUtil commonUtil = new CommonUtil();
 	
@@ -58,8 +62,8 @@ public class ReportingService {
 	public String generateReportExcel(String[] columns, List<Object[]> lstReportData, String strFileName) throws IOException {
 		 Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-		 	final Path fileStoragePath = Paths.get("upload-dir");
-		 	String filePath = fileStoragePath.resolve("\\"+UUID.randomUUID()+strFileName+".xlsx").toString();
+		 	final Path fileStoragePath = Paths.get(fileStorageLocation);
+		 	String filePath = fileStorageLocation+"\\"+UUID.randomUUID()+strFileName+".xlsx";
 	        CreationHelper createHelper = workbook.getCreationHelper();
 
 	        // Create a Sheet

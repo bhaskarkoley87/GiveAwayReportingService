@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.hackfse.giveaway.dto") 
 @Configuration
 @EnableAspectJAutoProxy
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class GiveAwayReportingServiceApplication {
 
 	public static void main(String[] args) {
